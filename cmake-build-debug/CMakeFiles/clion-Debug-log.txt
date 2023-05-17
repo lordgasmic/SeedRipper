@@ -1,6 +1,0 @@
-/home/lordgasmic/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/223.8617.54/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/lordgasmic/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/223.8617.54/bin/ninja/linux/x64/ninja -G Ninja -S /home/lordgasmic/CLionProjects/SeedRipper -B /home/lordgasmic/CLionProjects/SeedRipper/cmake-build-debug
--- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
--- Could NOT find WrapVulkanHeaders (missing: Vulkan_INCLUDE_DIR) 
--- Configuring done
--- Generating done
--- Build files have been written to: /home/lordgasmic/CLionProjects/SeedRipper/cmake-build-debug
