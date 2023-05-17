@@ -6,6 +6,9 @@
 #include <QGuiApplication>
 #include <QClipboard>
 #include "DropSiteWindow.h"
+#include <fstream>
+#include <iostream>
+#include <string>
 
 DropSiteWindow::DropSiteWindow() {
     abstractLabel = new QLabel(tr("This example accepts drags from other "
@@ -50,13 +53,32 @@ void DropSiteWindow::updateSeedLabel(const QMimeData *mimeData) {
         return;
     }
 
-    QString text;
-    text = mimeData->text().simplified();
+    QString q_filename = mimeData->text().simplified();
+    std::string inFile = q_filename.toStdString();
+    std::string path = inFile.substr(7);
+    std::ifstream inf{path};
+
+    if (!inf) {
+        std::cerr << "file not found\n";
+    }
+
+    std::string strInput;
+    while (inf) {
+        std::getline(inf, strInput);
+        if (strInput.find("Seed: ") != std::string::npos) {
+            int index = strInput.find("Seed: ");
+            strInput = strInput.substr(index + 6);
+            strInput = strInput.substr(0, strInput.find_first_of(','));
+            std::cout << strInput << '\n';
+            break;
+        }
+    }
+
     if (seedLabel->text().length() == 0) {
-        seedLabel->setText(text);
+        seedLabel->setText(QString::fromStdString(strInput));
     }
     else {
-        seedLabel->setText(seedLabel->text() + ", " + text);
+        seedLabel->setText(seedLabel->text() + ", " + QString::fromStdString(strInput));
     }
 
 #if QT_CONFIG(clipboard)
