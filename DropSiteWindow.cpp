@@ -3,6 +3,8 @@
 //
 
 #include <QVBoxLayout>
+#include <QGuiApplication>
+#include <QClipboard>
 #include "DropSiteWindow.h"
 
 DropSiteWindow::DropSiteWindow() {
@@ -12,13 +14,10 @@ DropSiteWindow::DropSiteWindow() {
     abstractLabel->setWordWrap(true);
     abstractLabel->adjustSize();
     dropArea = new DropArea;
-    connect(dropArea, &DropArea::changed,
-            this, &DropSiteWindow::updateFormatsTable);
-    formatsTable = new QTableWidget;
-    formatsTable->setColumnCount(2);
-    formatsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    formatsTable->setHorizontalHeaderLabels({tr("Format"), tr("Content")});
-    formatsTable->horizontalHeader()->setStretchLastSection(true);
+    connect(dropArea, &DropArea::changed, this, &DropSiteWindow::updateSeedLabel);
+    seedLabel = new QLabel("");
+    seedLabel->setWordWrap(true);
+    seedLabel->adjustSize();
     clearButton = new QPushButton(tr("Clear"));
     copyButton = new QPushButton(tr("Copy"));
     quitButton = new QPushButton(tr("Quit"));
@@ -34,51 +33,39 @@ DropSiteWindow::DropSiteWindow() {
 
     connect(quitButton, &QAbstractButton::clicked, this, &QWidget::close);
     connect(clearButton, &QAbstractButton::clicked, dropArea, &DropArea::clear);
-//    connect(copyButton, &QAbstractButton::clicked, this, &DropSiteWindow::copy);
+    connect(copyButton, &QAbstractButton::clicked, this, &DropSiteWindow::copy);
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(abstractLabel);
     mainLayout->addWidget(dropArea);
-    mainLayout->addWidget(formatsTable);
+    mainLayout->addWidget(seedLabel);
     mainLayout->addWidget(buttonBox);
 
     setWindowTitle(tr("Drop Site"));
     resize(700, 500);
 }
 
-void DropSiteWindow::updateFormatsTable(const QMimeData *mimeData) {
-    formatsTable->setRowCount(0);
+void DropSiteWindow::updateSeedLabel(const QMimeData *mimeData) {
     copyButton->setEnabled(false);
     if (!mimeData) {
         return;
     }
 
-    const QStringList formats = mimeData->formats();
-    for (const QString &format: formats) {
-        QTableWidgetItem *formatItem = new QTableWidgetItem(format);
-        formatItem->setFlags(Qt::ItemIsEnabled);
-        formatItem->setTextAlignment(Qt::AlignTop | Qt::AlignLeft);
-
-        QString text;
-        if (format == u"text/plain") {
-            text = mimeData->text().simplified();
-        }
-        else {
-//            QByteArray data = mimeData->data(format);
-//            if (data.size() > 32) {
-//                data.truncate(32);
-//            }
-//            text = QString::fromLatin1(data.toHex(' ')).toUpper();
-            continue;
-        }
-
-        int row = formatsTable->rowCount();
-        formatsTable->insertRow(row);
-        formatsTable->setItem(row, 0, new QTableWidgetItem(format));
-        formatsTable->setItem(row, 1, new QTableWidgetItem(text));
+    QString text;
+    text = mimeData->text().simplified();
+    if (seedLabel->text().length() == 0) {
+        seedLabel->setText(text);
+    }
+    else {
+        seedLabel->setText(seedLabel->text() + ", " + text);
     }
 
-    formatsTable->resizeColumnToContents(0);
 #if QT_CONFIG(clipboard)
-    copyButton->setEnabled(formatsTable->rowCount() > 0);
+    copyButton->setEnabled(seedLabel->text().length() > 0);
 #endif
+}
+
+void DropSiteWindow::copy() {
+    QString str = seedLabel->text();
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(str);
 }

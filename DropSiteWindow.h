@@ -23,16 +23,14 @@ public:
 public
     slots:
 
-    void updateFormatsTable(
-            const QMimeData *mimeData
-    );
+    void updateSeedLabel(const QMimeData *mimeData);
 
-//    void copy();
+    void copy();
 
 private:
     DropArea *dropArea;
     QLabel *abstractLabel;
-    QTableWidget *formatsTable;
+    QLabel *seedLabel;
 
     QPushButton *clearButton;
     QPushButton *copyButton;
