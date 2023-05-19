@@ -1,7 +1,7 @@
 //
 // Created by lordgasmic on 5/17/23.
 //
-
+#include <iostream>
 #include "DropArea.h"
 
 DropArea::DropArea(QWidget *parent) : QLabel(parent) {
@@ -18,7 +18,6 @@ void DropArea::dragEnterEvent(QDragEnterEvent *event) {
     setBackgroundRole(QPalette::Highlight);
 
     event->acceptProposedAction();
-    emit changed(event->mimeData());
 }
 
 void DropArea::dragMoveEvent(QDragMoveEvent *event) {
@@ -31,13 +30,13 @@ void DropArea::dropEvent(QDropEvent *event) {
     if (mimeData->hasText()) {
         setText(mimeData->text());
         setTextFormat(Qt::PlainText);
-    }
-    else {
+    } else {
         setText(tr("Cannot display data"));
     }
 
     setBackgroundRole(QPalette::Dark);
     event->acceptProposedAction();
+    emit changed(event->mimeData());
 }
 
 void DropArea::dragLeaveEvent(QDragLeaveEvent *event) {

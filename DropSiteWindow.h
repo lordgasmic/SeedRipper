@@ -20,12 +20,16 @@ Q_OBJECT
 public:
     DropSiteWindow();
 
+    void processFile(std::string *filename);
+
 public
     slots:
 
     void updateSeedLabel(const QMimeData *mimeData);
 
     void copy();
+
+    void clear();
 
 private:
     DropArea *dropArea;
@@ -36,6 +40,12 @@ private:
     QPushButton *copyButton;
     QPushButton *quitButton;
     QDialogButtonBox *buttonBox;
+
+    void processTxtFile();
+
+    void processPngFile();
+
+    void processTxtFile(std::string *filename);
 };
 
 #endif //SEEDRIPPER_DROPSITEWINDOW_H
