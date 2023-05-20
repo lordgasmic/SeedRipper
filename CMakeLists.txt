@@ -13,6 +13,7 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
+#remove win32 for console output
 add_executable(SeedRipper WIN32 main.cpp DropArea.cpp DropArea.h DropSiteWindow.cpp DropSiteWindow.h)
 target_link_libraries(SeedRipper
         Qt::Core

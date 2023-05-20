@@ -41,11 +41,9 @@ private:
     QPushButton *quitButton;
     QDialogButtonBox *buttonBox;
 
-    void processTxtFile();
+    void processTxtFile(const QString &filename);
 
-    void processPngFile();
-
-    void processTxtFile(std::string *filename);
+    void processPngFile(QString &filename);
 };
 
 #endif //SEEDRIPPER_DROPSITEWINDOW_H
